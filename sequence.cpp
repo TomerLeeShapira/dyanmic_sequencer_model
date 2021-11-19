@@ -6,20 +6,24 @@
 void Sequence::change_num_steps(uint8_t new_steps, bool preserve_pattern)
 {
 	uint8_t num_steps = get_num_steps();
-	
+
 	// Don't care about the pattern integrity. 
 	if (!preserve_pattern){
 		// Remove steps if new_steps < num_steps.
 		if (new_steps < num_steps){
-			for (int i = 0; i < num_steps - new_steps; i++){
+
+			uint8_t change = num_steps - new_steps;
+			for (int i = 0; i < change; i++){
 				steps.pop_back();
 
 			}
 		}
 		// Add steps if new_steps > num_steps.
 		if (new_steps > num_steps){
-			for (int i = 0; i < new_steps - num_steps; i++){
-				add_step();
+
+			uint8_t change = new_steps - num_steps;
+			for (int i = 0; i < change; i++){
+				add_steps(1);
 			}
 		}
 	}
@@ -28,9 +32,26 @@ void Sequence::change_num_steps(uint8_t new_steps, bool preserve_pattern)
 	// determines the resolution in which this is possible.
 	else {
 		// TODO: this is gonna suck to do. 
+		// Same kind of change as done within a given step when improving its resolution, 
+		// but now done across the whole sequence. 
 	}
 
 
+}
+
+// Return step at the given index. Null if out of bounds.
+std::shared_ptr<Step> Sequence::get_step(uint8_t position)
+{
+	// Can't index where nothing exists. 	
+	if (position >= get_num_steps()){
+		return nullptr;
+	}
+
+	// Return the step. 
+	else {
+		auto it = steps.begin();
+		return *(it + position);
+	}
 }
 
 
